@@ -16,7 +16,7 @@
     </servlet-class>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>au.com.vb.app.MessageApplication</param-value>
+      <param-value>au.com.vb.app.MovieApplication</param-value>
     </init-param>
   </servlet>
 

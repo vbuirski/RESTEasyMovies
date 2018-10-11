@@ -1,2 +1,3 @@
-au/com/vb/app/MessageApplication.class
-au/com/vb/rest/MessageRestService.class
+au/com/vb/model/Movie.class
+au/com/vb/rest/MovieRestService.class
+au/com/vb/app/MovieApplication.class
