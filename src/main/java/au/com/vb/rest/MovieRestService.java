@@ -28,7 +28,7 @@ public class MovieRestService {
 
   @GET
   @Path("/get/{id}")
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_JSON })
   public Movie movieByImdbId(@PathParam("id") String imdbId) {
 
     System.out.println("*** Calling get for a given ImdbID***");
