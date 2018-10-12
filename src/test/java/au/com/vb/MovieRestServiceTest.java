@@ -1,7 +1,7 @@
 package au.com.vb;
 
+import au.com.vb.client.ServicesInterface;
 import au.com.vb.model.Movie;
-import au.com.vb.rest.MovieRestService;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -21,11 +22,10 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 import org.junit.Before;
 import org.junit.Test;
-import sun.misc.IOUtils;
 
 public class MovieRestServiceTest {
 
-  public static final UriBuilder FULL_PATH = UriBuilder.fromPath("http://127.0.0.1:8082/RestEasyTutorial/rest");
+  public static final UriBuilder FULL_PATH = UriBuilder.fromPath("http://localhost:8090/RestEasyMovies/rest");
   Movie heroMovie = null;
   Movie supergirlMovie = null;
   ObjectMapper jsonMapper = null;
@@ -38,19 +38,19 @@ public class MovieRestServiceTest {
     final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
     jsonMapper.setDateFormat(sdf);
 
-    try (InputStream inputStream = new MovieRestServiceTest().getClass().getResourceAsStream("./movies/hero.json")) {
-      final String transformerMovieAsString = String.format(IOUtils.toString(inputStream, StandardCharsets.UTF_8));
-      heroMovie = jsonMapper.readValue(transformerMovieAsString, Movie.class);
+    try (InputStream inputStream = MovieRestServiceTest.class.getResourceAsStream("/movies/hero.json")) {
+      final String heroMovieAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
+      heroMovie = jsonMapper.readValue(heroMovieAsString, Movie.class);
     } catch (final Exception e) {
       e.printStackTrace();
       throw new RuntimeException("Test is going to die ...", e);
     }
 
-    try (InputStream inputStream = new MovieRestServiceTest().getClass().getResourceAsStream("./movies/supergirl.json")) {
-      final String supergirlMovieAsString = String.format(IOUtils.toString(inputStream, StandardCharsets.UTF_8));
-       = jsonMapper.readValue(supergirlMovieAsString, Movie.class);
-
+    try (InputStream inputStream = MovieRestServiceTest.class.getResourceAsStream("/movies/supergirl.json")) {
+      final String supergirlMovieAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
+      supergirlMovie = jsonMapper.readValue(supergirlMovieAsString, Movie.class);
     } catch (final Exception e) {
+      e.printStackTrace();
       throw new RuntimeException("Test is going to die ...", e);
     }
   }
@@ -60,11 +60,11 @@ public class MovieRestServiceTest {
 
     final ResteasyClient client = new ResteasyClientBuilder().build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
     Response moviesResponse = proxy.addMovie(heroMovie);
     moviesResponse.close();
-    moviesResponse = proxy.addMovie();
+    moviesResponse = proxy.addMovie(supergirlMovie);
     moviesResponse.close();
 
     final List<Movie> movies = proxy.listMovies();
@@ -78,7 +78,7 @@ public class MovieRestServiceTest {
 
     final ResteasyClient client = new ResteasyClientBuilder().build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
     final Response moviesResponse = proxy.addMovie(heroMovie);
     moviesResponse.close();
@@ -92,11 +92,11 @@ public class MovieRestServiceTest {
 
     final ResteasyClient client = new ResteasyClientBuilder().build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
-    Response moviesResponse = proxy.addMovie();
+    Response moviesResponse = proxy.addMovie(heroMovie);
     moviesResponse.close();
-    moviesResponse = proxy.addMovie(heroMovie);
+    moviesResponse = proxy.addMovie(supergirlMovie);
 
     if (moviesResponse.getStatus() != Response.Status.CREATED.getStatusCode()) {
       System.out.println("Failed : HTTP error code : " + moviesResponse.getStatus());
@@ -114,10 +114,10 @@ public class MovieRestServiceTest {
     final ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpClient);
     final ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
-    final Response supergirlResponse = proxy.addMovie();
-    final Response transformerResponse = proxy.addMovie(heroMovie);
+    final Response supergirlResponse = proxy.addMovie(heroMovie);
+    final Response transformerResponse = proxy.addMovie(supergirlMovie);
 
     if (supergirlResponse.getStatus() != Response.Status.CREATED.getStatusCode()) {
       System.out.println("Supergirl Movie creation Failed : HTTP error code : " + supergirlResponse.getStatus());
@@ -137,9 +137,9 @@ public class MovieRestServiceTest {
 
     final ResteasyClient client = new ResteasyClientBuilder().build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
-    Response moviesResponse = proxy.addMovie();
+    Response moviesResponse = proxy.addMovie(supergirlMovie);
     moviesResponse.close();
     moviesResponse = proxy.deleteMovie(supergirlMovie.getImdbId());
 
@@ -157,12 +157,12 @@ public class MovieRestServiceTest {
 
     final ResteasyClient client = new ResteasyClientBuilder().build();
     final ResteasyWebTarget target = client.target(FULL_PATH);
-    final MovieRestService proxy = target.proxy(MovieRestService.class);
+    final ServicesInterface proxy = target.proxy(ServicesInterface.class);
 
-    Response moviesResponse = proxy.addMovie();
+    Response moviesResponse = proxy.addMovie(supergirlMovie);
     moviesResponse.close();
     supergirlMovie.setTitle("Supergirl Begins");
-    moviesResponse = proxy.updateMovie();
+    moviesResponse = proxy.updateMovie(supergirlMovie);
 
     if (moviesResponse.getStatus() != Response.Status.OK.getStatusCode()) {
       System.out.println("Failed : HTTP error code : " + moviesResponse.getStatus());
@@ -171,4 +171,5 @@ public class MovieRestServiceTest {
     moviesResponse.close();
     System.out.println("Response Code: " + moviesResponse.getStatus());
   }
+
 }
