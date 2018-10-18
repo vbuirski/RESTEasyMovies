@@ -1,6 +1,9 @@
 {
   "title": "SuperGirl",
   "imdbId": "189",
-  "genre": "comedy",
-  "description": "Supergirl movie description"
+  "genre": "Action",
+  "rating" : "8/10",
+  "year" : "2018",
+  "summary" : "Supergirl rocks"
+
 }

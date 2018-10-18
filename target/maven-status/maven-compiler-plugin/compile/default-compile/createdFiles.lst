@@ -1,3 +1,4 @@
-au/com/vb/model/Movie.class
-au/com/vb/rest/MovieRestService.class
-au/com/vb/app/MovieApplication.class
+au\com\vb\model\Movie.class
+au\com\vb\client\ServicesInterface.class
+au\com\vb\app\MovieApplication.class
+au\com\vb\rest\MovieRestService.class

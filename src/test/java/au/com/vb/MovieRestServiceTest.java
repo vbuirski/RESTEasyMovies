@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class MovieRestServiceTest {
 
-  public static final UriBuilder FULL_PATH = UriBuilder.fromPath("http://localhost:8090/RestEasyMovies/rest");
+  public static final UriBuilder FULL_PATH = UriBuilder.fromPath("http://localhost:8080/RestEasyMovies/rest");
   Movie heroMovie = null;
   Movie supergirlMovie = null;
   ObjectMapper jsonMapper = null;

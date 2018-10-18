@@ -10,12 +10,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-//http://localhost:8090/RESTfulExample/rest/message/hello%20world
+
 @Path("/movies")
 public class MovieRestService {
 
   private Map<String, Movie> inventory = new HashMap<String, Movie>();
 
+  //http://localhost:8080/RestEasyMovies/rest/movies/message/hello
   @GET
   @Path("/message/{param}")
   public Response printMessage(@PathParam("param") String msg) {
@@ -23,7 +24,6 @@ public class MovieRestService {
     String result = "RESTEasy example : " + msg;
 
     return Response.status(200).entity(result).build();
-
   }
 
   @GET
@@ -31,20 +31,20 @@ public class MovieRestService {
   @Produces({ MediaType.APPLICATION_JSON })
   public Movie movieByImdbId(@PathParam("id") String imdbId) {
 
-    System.out.println("*** Calling get for a given ImdbID***");
+    System.out.println("*** Calling GET for a given ImdbID***");
 
     if (inventory.containsKey(imdbId)) {
       return inventory.get(imdbId);
     } else
       return null;
-    }
+  }
 
   @POST
   @Path("/add")
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response addMovie(Movie movie) {
 
-    System.out.println("*** Calling add ***");
+    System.out.println("*** Calling ADD ***");
 
     if (null != inventory.get(movie.getImdbId())) {
       return Response.status(Response.Status.NOT_MODIFIED).entity("Movie is Already in the database.").build();
@@ -59,7 +59,7 @@ public class MovieRestService {
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response updateMovie(Movie movie) {
 
-    System.out.println("*** Calling update ***");
+    System.out.println("*** Calling UPDATE ***");
 
     if (null == inventory.get(movie.getImdbId())) {
       return Response.status(Response.Status.NOT_MODIFIED)
@@ -74,7 +74,7 @@ public class MovieRestService {
   @Path("/delete")
   public Response deleteMovie(@QueryParam("imdbId") String imdbId) {
 
-    System.out.println("*** Calling delete ***");
+    System.out.println("*** Calling DELETE ***");
 
     if (null == inventory.get(imdbId)) {
       return Response.status(Response.Status.NOT_FOUND).entity("Movie is not in the database.\nUnable to Delete")

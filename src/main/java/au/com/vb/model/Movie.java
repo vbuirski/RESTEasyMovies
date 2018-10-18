@@ -6,21 +6,23 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "movie", propOrder = { "imdbId", "title", "genre", "description" })
+@XmlType(name = "movie", propOrder = { "imdbId", "title", "genre", "rating", "year", "summary" })
 public class Movie {
 
   protected String imdbId;
   protected String title;
   protected String genre;
-  protected String description;
+  protected String rating;
+  protected String year;
+  protected String summary;
 
-
-
-  public Movie(String imdbId, String title, String genre, String description) {
+  public Movie(String imdbId, String title, String genre, String rating, String year, String summary) {
     this.imdbId = imdbId;
     this.title = title;
     this.genre = genre;
-    this.description = description;
+    this.rating = rating;
+    this.year = year;
+    this.summary = summary;
   }
 
   public Movie() {}
@@ -49,14 +51,29 @@ public class Movie {
     this.genre = genre;
   }
 
-  public String getDescription() {
-    return description;
+  public String getSummary() {
+    return summary;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setSummary(String summary) {
+    this.summary = summary;
   }
 
+  public String getRating() {
+    return rating;
+  }
+
+  public void setRating(String rating) {
+    this.rating = rating;
+  }
+
+  public String getYear() {
+    return year;
+  }
+
+  public void setYear(String year) {
+    this.year = year;
+  }
   @Override
   public boolean equals(Object o) {
     if (this == o)
@@ -83,7 +100,9 @@ public class Movie {
             "imdbId='" + imdbId + '\'' +
             ", title='" + title + '\'' +
             ", genre='" + genre + '\'' +
-            ", description='" + description + '\'' +
+            ", rating='" + rating + '\'' +
+            ", year='" + year + '\'' +
+            ", summary='" + summary + '\'' +
             '}';
   }
 }
